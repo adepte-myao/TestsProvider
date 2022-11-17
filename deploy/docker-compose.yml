@@ -2,27 +2,32 @@ version: '3.8'
 
 services:
 
-  parser:
-    container_name: service
+  service:
+    container_name: tests_service
 
     build:
-      context: ./
+      context: ../
       dockerfile: build/docker/service/Dockerfile
+    restart: unless-stopped
     ports:
       - ${SERVICE_PORT}:${SERVICE_PORT}
     links:
       - db
     depends_on:
       - db
+    env_file:
+      - .env
 
   db:
-    container_name: db_tests
-    build: ./build/docker/db
-    restart: always
+    container_name: db_provider_tests
+    build:
+      context: ../build/docker/db
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
     volumes:
       -  pgs_tests_volume:/var/lib/postgresql/data
     ports:
-      - "5555:5432"
+      - 5555:5432
     environment:
       POSTGRES_USER: $POSTGRES_USER
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD

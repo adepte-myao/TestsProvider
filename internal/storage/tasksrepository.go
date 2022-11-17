@@ -24,19 +24,19 @@ func (repo *PostgresTaskRepository) GetRandom(sectionID int32, cerAreaID int32) 
 		"FROM tasks LIMIT 1 OFFSET (random() * (SELECT COUNT(*) FROM tasks));",
 	).Scan(&task.ID, &task.Question, &task.Answer)
 	if err != nil {
-		return models.Task{}, nil
+		return models.Task{}, err
 	}
 
 	rows, err := tx.Query("SELECT answer_option FROM options WHERE question_id = $1", task.ID)
 	if err != nil {
-		return models.Task{}, nil
+		return models.Task{}, err
 	}
 
 	var option string
 	for rows.Next() {
 		err = rows.Scan(&option)
 		if err != nil {
-			return task, nil
+			return task, err
 		}
 		task.Options = append(task.Options, option)
 	}

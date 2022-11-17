@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("deploy/.env")
 	if err != nil {
 		fmt.Print(err)
 		return
@@ -24,7 +24,7 @@ func main() {
 	str := os.Getenv("LOG_LEVEL")
 	logLevel, err := logrus.ParseLevel(str)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Error(err)
 		return
 	}
 	logger.Level = logLevel
@@ -32,7 +32,7 @@ func main() {
 	dbConn := os.Getenv("DATABASE_URL")
 	db, closeDbFunc, err := storage.NewPostgresDb(dbConn)
 	if err != nil {
-		logger.Fatal(err)
+		logger.Error(err)
 		return
 	}
 	defer closeDbFunc(db)
@@ -49,7 +49,7 @@ func main() {
 
 	err = serv.Start()
 	if err != nil {
-		logger.Fatal(err)
+		logger.Error(err)
 		return
 	}
 }
