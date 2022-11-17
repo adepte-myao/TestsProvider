@@ -10,7 +10,7 @@ WORKDIR /test-provider-service
 FROM alpine:latest 
 RUN apk --update add ca-certificates
 COPY --from=build /bin/app /bin/app
-COPY --from=build /test-provider-service/deploy/.env /deploy/.env
+COPY --from=build /test-provider-service/deploy_task_provider/.env /deploy_task_provider/.env
 
 EXPOSE 9001
 CMD [ "/bin/app" ]

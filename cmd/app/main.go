@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load("deploy/.env")
+	err := godotenv.Load("deploy_task_provider/.env")
 	if err != nil {
 		fmt.Print(err)
 		return
