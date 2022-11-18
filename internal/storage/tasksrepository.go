@@ -20,6 +20,8 @@ func (repo *PostgresTaskRepository) GetRandom(sectionID int32, cerAreaID int32) 
 	}
 
 	tx, _ := repo.db.Begin()
+	defer tx.Rollback()
+
 	err := tx.QueryRow("SELECT id, question, answer "+
 		"FROM tasks LIMIT 1 OFFSET (random() * (SELECT COUNT(*) FROM tasks));",
 	).Scan(&task.ID, &task.Question, &task.Answer)
@@ -40,6 +42,7 @@ func (repo *PostgresTaskRepository) GetRandom(sectionID int32, cerAreaID int32) 
 		}
 		task.Options = append(task.Options, option)
 	}
+	tx.Commit()
 
 	return task, nil
 }
